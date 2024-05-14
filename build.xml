@@ -58,7 +58,7 @@
 
     An example of overriding the target for project execution could look like this:
 
-        <target name="run" depends="DetecciónVulnerabilidades-impl.jar">
+        <target name="run" depends on="DetecciónVulnerabilidades-impl.jar">
             <exec dir="bin" executable="launcher.exe">
                 <arg file="${dist.jar}"/>
             </exec>
@@ -71,3 +71,4 @@
 
     -->
 </project>
+
