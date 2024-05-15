@@ -1,5 +1,7 @@
 import banking.DatabaseManagerCuentasBancarias;
+import banking.SeguridadCuentasDeBanco;
 import password.DatabaseManagerContrasenas;
+import reporting.DatabaseManagerReportes;
 
 import java.util.List;
 import java.util.Map;
@@ -16,6 +18,8 @@ public class main {
         System.out.println("Seleccione una opción:");
         System.out.println("1. Mostrar contraseñas por proyecto");
         System.out.println("2. Mostrar cuentas bancarias");
+        System.out.println("3. Mostrar cuentas bancarias encriptadas");
+        System.out.println("4. Guardar reporte");
         System.out.println("0. Salir");
         System.out.print("Ingrese el número de la opción: ");
         int opcion = scanner.nextInt();
@@ -27,6 +31,12 @@ public class main {
                 break;
             case 2:
                 mostrarCuentasBancarias();
+                break;
+            case 3:
+                cuentasBancariasEncriptadas();
+                break;
+            case 4:
+                guardarReporte();
                 break;
             case 0:
                 System.out.println("Saliendo del programa...");
@@ -53,11 +63,23 @@ public class main {
                 System.out.println("Contraseña para el proyecto " + idProyecto + ": " + mensaje);
             }
         }
+        // Llamar al método para guardar las recomendaciones de contraseñas en la tabla vulnerabilidad
+        DatabaseManagerContrasenas.guardarRecomendacionesEnVulnerabilidad();
     }
+
 
     // Método para mostrar las cuentas bancarias
     private static void mostrarCuentasBancarias() {
         // Llamar al método para mostrar las cuentas bancarias
         DatabaseManagerCuentasBancarias.mostrarCuentasBancarias();
+    }
+
+    private static void cuentasBancariasEncriptadas(){
+        SeguridadCuentasDeBanco.mostrarCuentasBancarias();
+    }
+
+    public static void guardarReporte() {
+        // Llamar al método para guardar el reporte
+        DatabaseManagerReportes.guardarReporte();
     }
 }

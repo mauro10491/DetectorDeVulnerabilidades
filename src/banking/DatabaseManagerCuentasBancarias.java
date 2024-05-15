@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Base64;
 
 public class DatabaseManagerCuentasBancarias {
 
@@ -23,7 +24,6 @@ public class DatabaseManagerCuentasBancarias {
                     String numeroCuenta = resultSet.getString("numero_cuenta");
                     String entidadBancaria = resultSet.getString("entidad_bancaria");
                     String ultimaActividad = resultSet.getString("ultima_actividad");
-                    Boolean autenticacionMultifactor = resultSet.getBoolean("autenticacion_multifactor");
 
                     // Imprimir los datos de la cuenta bancaria
                     System.out.println("ID Cuenta: " + idCuenta);
@@ -31,7 +31,6 @@ public class DatabaseManagerCuentasBancarias {
                     System.out.println("Número de Cuenta: " + numeroCuenta);
                     System.out.println("Entidad Bancaria: " + entidadBancaria);
                     System.out.println("Última Actividad: " + ultimaActividad);
-                    System.out.println("Autenticación Multifactor: " + autenticacionMultifactor);
                     System.out.println("--------------------------------------");
                 }
             }

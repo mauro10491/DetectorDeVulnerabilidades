@@ -1,10 +1,6 @@
 package password;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,6 +14,26 @@ public class DatabaseManagerContrasenas {
     private static final String PASSWORD = "Daniel1128";
 
     // Método para obtener las contraseñas y sus recomendaciones por proyecto
+
+    public static void guardarRecomendacionesEnVulnerabilidad() {
+        try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD)) {
+            // Obtener las contraseñas y sus recomendaciones por proyecto
+            Map<String, List<String>> contraseñasPorProyecto = obtenerContrasenasPorProyecto();
+
+            // Iterar sobre el mapa e insertar las recomendaciones en la tabla vulnerabilidad
+            for (Map.Entry<String, List<String>> entry : contraseñasPorProyecto.entrySet()) {
+                String idProyecto = entry.getKey();
+                List<String> mensajes = entry.getValue();
+                for (String mensaje : mensajes) {
+                    insertarRecomendacionEnVulnerabilidad(connection, idProyecto, mensaje);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
     public static Map<String, List<String>> obtenerContrasenasPorProyecto() {
         // Mapa para almacenar las contraseñas por proyecto
         Map<String, List<String>> contraseñasPorProyecto = new HashMap<>();
@@ -53,28 +69,47 @@ public class DatabaseManagerContrasenas {
 
     // Método para obtener la recomendación para una contraseña dada
     private static String obtenerRecomendacion(String contraseña) {
-        StringBuilder recomendacion = new StringBuilder();
+        List<String> recomendaciones = new ArrayList<>();
+
         // Verifica si la contraseña cumple con ciertos criterios y agrega recomendaciones en función de eso
         if (contraseña.length() < 8) {
-            recomendacion.append("La contraseña debe tener al menos 8 caracteres.\n");
+            recomendaciones.add("La contraseña debe tener al menos 8 caracteres.");
         }
         if (!contieneCaracteresEspeciales(contraseña)) {
-            recomendacion.append("La contraseña debe contener al menos un carácter especial (!@#$%^&*).\n");
+            recomendaciones.add("La contraseña debe contener al menos un carácter especial (!@#$%^&*).");
         }
         if (!contieneMayusculas(contraseña)) {
-            recomendacion.append("La contraseña debe contener al menos una letra mayúscula.\n");
+            recomendaciones.add("La contraseña debe contener al menos una letra mayúscula.");
         }
         if (!contieneMinusculas(contraseña)) {
-            recomendacion.append("La contraseña debe contener al menos una letra minúscula.\n");
+            recomendaciones.add("La contraseña debe contener al menos una letra minúscula.");
         }
         if (!contieneDigitos(contraseña)) {
-            recomendacion.append("La contraseña debe contener al menos un dígito (0-9).\n");
+            recomendaciones.add("La contraseña debe contener al menos un dígito (0-9).");
         }
-        if (recomendacion.length() == 0) {
-            recomendacion.append("La contraseña es segura.");
+        if (recomendaciones.isEmpty()) {
+            recomendaciones.add("La contraseña es segura.");
         }
-        // Devuelve la recomendación en forma de cadena
-        return recomendacion.toString();
+
+        // Devuelve la recomendación en forma de cadena, concatenando todas las recomendaciones
+        return String.join("\n", recomendaciones);
+    }
+
+    // Método para insertar una recomendación en la tabla vulnerabilidad
+    private static void insertarRecomendacionEnVulnerabilidad(Connection connection, String idProyecto, String recomendacion) throws SQLException {
+        // SQL para insertar la recomendación concatenada en la tabla vulnerabilidad
+        String query = "INSERT INTO vulnerabilidad (tipo_vulnerabilidad, descripcion_vulnerabilidad,  fecha_deteccion, recomendacion_contrasena) " +
+                "VALUES (?, ?, ?, ?)";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            // Configurar los parámetros del SQL
+            statement.setString(1, "Contraseña débil"); // Ejemplo de tipo de vulnerabilidad
+            statement.setString(2, "Contraseña débil encontrada en el proyecto " + idProyecto); // Ejemplo de descripción de vulnerabilidad
+            statement.setDate(3, new java.sql.Date(System.currentTimeMillis())); // Fecha de detección actual
+            statement.setString(4, recomendacion); // Recomendación de la contraseña
+
+            // Ejecutar el SQL
+            statement.executeUpdate();
+        }
     }
 
     // Métodos auxiliares para verificar si la contraseña contiene ciertos tipos de caracteres
