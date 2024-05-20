@@ -31,6 +31,7 @@ public class main {
                 break;
             case 2:
                 mostrarCuentasBancarias();
+                guardarVulnerabilidadCuentaBancaria();
                 break;
             case 3:
                 cuentasBancariasEncriptadas();
@@ -82,4 +83,9 @@ public class main {
         // Llamar al método para guardar el reporte
         DatabaseManagerReportes.guardarReporte();
     }
+
+    public static void guardarVulnerabilidadCuentaBancaria(){
+        SeguridadCuentasDeBanco.mostrarCuentasBancarias();
+    }
+
 }

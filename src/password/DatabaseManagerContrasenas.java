@@ -96,21 +96,28 @@ public class DatabaseManagerContrasenas {
     }
 
     // Método para insertar una recomendación en la tabla vulnerabilidad
+    // Método para insertar una recomendación en la tabla vulnerabilidad
     private static void insertarRecomendacionEnVulnerabilidad(Connection connection, String idProyecto, String recomendacion) throws SQLException {
-        // SQL para insertar la recomendación concatenada en la tabla vulnerabilidad
-        String query = "INSERT INTO vulnerabilidad (tipo_vulnerabilidad, descripcion_vulnerabilidad,  fecha_deteccion, recomendacion_contrasena) " +
-                "VALUES (?, ?, ?, ?)";
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
-            // Configurar los parámetros del SQL
-            statement.setString(1, "Contraseña débil"); // Ejemplo de tipo de vulnerabilidad
-            statement.setString(2, "Contraseña débil encontrada en el proyecto " + idProyecto); // Ejemplo de descripción de vulnerabilidad
-            statement.setDate(3, new java.sql.Date(System.currentTimeMillis())); // Fecha de detección actual
-            statement.setString(4, recomendacion); // Recomendación de la contraseña
+        // Verificar si hay recomendaciones antes de insertar
+        if (!recomendacion.isEmpty()) {
+            // SQL para insertar la recomendación concatenada en la tabla vulnerabilidad
+            String query = "INSERT INTO vulnerabilidad (tipo_vulnerabilidad, descripcion_vulnerabilidad,  fecha_deteccion, recomendacion_contrasena) " +
+                    "VALUES (?, ?, ?, ?)";
+            try (PreparedStatement statement = connection.prepareStatement(query)) {
+                // Configurar los parámetros del SQL
+                statement.setString(1, "Contraseña débil"); // Ejemplo de tipo de vulnerabilidad
+                statement.setString(2, "Contraseña débil encontrada en el proyecto " + idProyecto); // Ejemplo de descripción de vulnerabilidad
+                statement.setDate(3, new java.sql.Date(System.currentTimeMillis())); // Fecha de detección actual
+                statement.setString(4, recomendacion); // Recomendación de la contraseña
 
-            // Ejecutar el SQL
-            statement.executeUpdate();
+                // Ejecutar el SQL
+                statement.executeUpdate();
+            }
+        } else {
+            System.out.println("No se encontraron recomendaciones para la contraseña en el proyecto " + idProyecto);
         }
     }
+
 
     // Métodos auxiliares para verificar si la contraseña contiene ciertos tipos de caracteres
     private static boolean contieneCaracteresEspeciales(String contraseña) {

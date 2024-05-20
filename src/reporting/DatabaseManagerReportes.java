@@ -45,9 +45,6 @@ public class DatabaseManagerReportes {
         }
     }
 
-
-
-
     private static int obtenerIdVulnerabilidad(Connection connection) throws SQLException {
         int idVulnerabilidad = -1;
         // Definir la consulta SQL para obtener el ID de la vulnerabilidad
@@ -61,7 +58,7 @@ public class DatabaseManagerReportes {
         return idVulnerabilidad;
     }
 
-    private static void insertarReporte(Connection connection, int idVulnerabilidad, String contenido) throws SQLException {
+    public static void insertarReporte(Connection connection, int idVulnerabilidad, String contenido) throws SQLException {
         // Definir la consulta SQL para insertar un nuevo reporte
         String query = "INSERT INTO reporte (id_vulnerabilidad, fecha_reporte, contenido) VALUES (?, CURRENT_DATE, ?)";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
