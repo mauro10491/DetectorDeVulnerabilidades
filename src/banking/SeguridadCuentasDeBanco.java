@@ -9,7 +9,23 @@ public class SeguridadCuentasDeBanco {
     private static final String USER = "postgres";
     private static final String PASSWORD = "Daniel1128";
 
+    // Método para mostrar todas las cuentas bancarias
     public static void mostrarCuentasBancarias() {
+        try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD)) {
+            String query = "SELECT * FROM cuenta_bancaria";
+            try (Statement statement = connection.createStatement();
+                 ResultSet resultSet = statement.executeQuery(query)) {
+                while (resultSet.next()) {
+                    imprimirDatosCuentaBancaria(resultSet);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Método para verificar cuentas bancarias y guardar vulnerabilidades
+    public static void verificarYGuardarVulnerabilidades() {
         try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD)) {
             String query = "SELECT * FROM cuenta_bancaria";
             try (Statement statement = connection.createStatement();
@@ -23,8 +39,6 @@ public class SeguridadCuentasDeBanco {
                     if (!encriptada) {
                         generarReporteVulnerabilidad(connection, idProyecto, numeroCuenta);
                     }
-                    // Imprimir los datos de la cuenta bancaria
-                    imprimirDatosCuentaBancaria(resultSet);
                 }
             }
         } catch (SQLException e) {
@@ -43,7 +57,7 @@ public class SeguridadCuentasDeBanco {
     }
 
     private static void insertarReporteVulnerabilidad(Connection connection, String tipoVulnerabilidad, String descripcionVulnerabilidad, String fechaDeteccion, String recomendacion) throws SQLException {
-        String query = "INSERT INTO vulnerabilidad (tipo_vulnerabilidad, descripcion_vulnerabilidad, fecha_deteccion, recomendacion_contrasena) " +
+        String query = "INSERT INTO vulnerabilidad (tipo_vulnerabilidad, descripcion_vulnerabilidad, fecha_deteccion, recomendacion_vulnerabilidad) " +
                 "VALUES (?, ?, ?, ?)";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, tipoVulnerabilidad);
@@ -56,7 +70,7 @@ public class SeguridadCuentasDeBanco {
         }
     }
 
-    private static void imprimirDatosCuentaBancaria(ResultSet resultSet) throws SQLException {
+    public static void imprimirDatosCuentaBancaria(ResultSet resultSet) throws SQLException {
         int idCuenta = resultSet.getInt("id_cuenta_bancaria");
         int idProyecto = resultSet.getInt("id_proyecto");
         String numeroCuenta = resultSet.getString("numero_cuenta");
