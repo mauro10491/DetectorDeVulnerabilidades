@@ -75,15 +75,18 @@ public class main {
         DatabaseManagerCuentasBancarias.mostrarCuentasBancarias();
     }
 
+    //Metodo para mostrar las cuentas bancarias encriptadas
     private static void cuentasBancariasEncriptadas(){
         SeguridadCuentasDeBanco.mostrarCuentasBancarias();
     }
 
+    // Método para guardar el reporte
     public static void guardarReporte() {
         // Llamar al método para guardar el reporte
         DatabaseManagerReportes.guardarReporte();
     }
 
+    // Método para guardar la vulnerabilidad de la cuenta bancaria
     public static void guardarVulnerabilidadCuentaBancaria(){
         SeguridadCuentasDeBanco.mostrarCuentasBancarias();
     }

@@ -96,7 +96,6 @@ public class DatabaseManagerContrasenas {
     }
 
     // Método para insertar una recomendación en la tabla vulnerabilidad
-    // Método para insertar una recomendación en la tabla vulnerabilidad
     private static void insertarRecomendacionEnVulnerabilidad(Connection connection, String idProyecto, String recomendacion) throws SQLException {
         // Verificar si hay recomendaciones antes de insertar
         if (!recomendacion.isEmpty()) {

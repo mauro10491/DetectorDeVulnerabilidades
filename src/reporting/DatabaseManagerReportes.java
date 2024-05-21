@@ -17,7 +17,7 @@ public class DatabaseManagerReportes {
         // Establecer la conexión utilizando las credenciales definidas localmente
         try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD)) {
             // Definir la consulta SQL para seleccionar los datos de la tabla vulnerabilidad
-            String query = "SELECT id_vulnerabilidad, tipo_vulnerabilidad, descripcion_vulnerabilidad, fecha_deteccion, recomendacion_contrasena FROM vulnerabilidad";
+            String query = "SELECT id_vulnerabilidad, tipo_vulnerabilidad, descripcion_vulnerabilidad, fecha_deteccion, recomendacion_vulnerabilidad FROM vulnerabilidad";
             try (PreparedStatement statement = connection.prepareStatement(query);
                  ResultSet resultSet = statement.executeQuery()) {
 
@@ -27,7 +27,7 @@ public class DatabaseManagerReportes {
                     String tipoVulnerabilidad = resultSet.getString("tipo_vulnerabilidad");
                     String descripcion = resultSet.getString("descripcion_vulnerabilidad");
                     String fechaDeteccion = resultSet.getString("fecha_deteccion");
-                    String recomendacion = resultSet.getString("recomendacion_contrasena");
+                    String recomendacion = resultSet.getString("recomendacion_vulnerabilidad");
 
                     // Concatenar los datos en el formato deseado, incluyendo la recomendación de la contraseña
                     StringBuilder contenido = new StringBuilder();
@@ -45,18 +45,6 @@ public class DatabaseManagerReportes {
         }
     }
 
-    private static int obtenerIdVulnerabilidad(Connection connection) throws SQLException {
-        int idVulnerabilidad = -1;
-        // Definir la consulta SQL para obtener el ID de la vulnerabilidad
-        String query = "SELECT id_vulnerabilidad FROM vulnerabilidad LIMIT 1"; // Aquí podrías ajustar la consulta según tus necesidades
-        try (PreparedStatement statement = connection.prepareStatement(query);
-             ResultSet resultSet = statement.executeQuery()) {
-            if (resultSet.next()) {
-                idVulnerabilidad = resultSet.getInt("id_vulnerabilidad");
-            }
-        }
-        return idVulnerabilidad;
-    }
 
     public static void insertarReporte(Connection connection, int idVulnerabilidad, String contenido) throws SQLException {
         // Definir la consulta SQL para insertar un nuevo reporte
